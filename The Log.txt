@@ -1,0 +1,57 @@
+20/7/2019
+
+1. Setup the environment 
+========================
+a. Install Node.js
+https://nodejs.org/download/release/latest-v9.x/
+
+b. Create an reactApp
+i) create a folder reactApp on desktop
+ii) check module package
+cd reactApp
+npm init -y
+
+c) install React and react dom
+npm install react --save
+npm install react-dom --save
+
+d) install webpack + babel
+npm install webpack webpack-dev-server webpack-cli --save
+npm install babel-core babel-loader babel-preset-env babel-preset-react html-webpack-plugin --save-dev
+npm install babel-preset-es2015 babel-preset-stage-2 --save
+
+
+e) Create the Files
+type nul > index.html
+type nul > App.js
+type nul > main.js
+type nul > webpack.config.js   
+---- port: 8081
+type nul > .babelrc
+
+f) delete line in package.json
+"test": "echo \"Error: no test specified\" && exit 1"
+
+g) add line in package.jason
+"start": "webpack-dev-server --mode development --open --hot",
+"build": "webpack --mode production"
+
+h) put content in index.html, App.js, main.js, babelrc
+ 
+i) start the server
+npm start
+http://localhost:8081/
+
+npm install react-navigation --save-dev
+npm install react-native --save-dev
+npm install @react-navigation/core --save-dev
+npm install @react-navigation/web --save-dev
+
+reference:
+https://www.tutorialspoint.com/reactjs
+
+https://reactnavigation.org/docs/en/params.html
+
+https://reactnavigation.org/docs/en/navigating.html
+
+https://stackoverflow.com/questions/45585542/detecting-when-user-scrolls-to-bottom-of-div-with-react-js
