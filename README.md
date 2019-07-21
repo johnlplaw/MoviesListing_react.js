@@ -16,7 +16,7 @@
  To run the bundle file:
  <br>
  Open the file c:\reactApp\index.html by Google Chrome.
- <br>
+ <br> <br> <br>
  The main files involved:
  <br>
  App.js - Main coding for react.js framework  <br>
