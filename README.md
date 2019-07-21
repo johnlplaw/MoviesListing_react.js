@@ -1,6 +1,6 @@
 # reactApp
  Movies Listing
- <br>
+ <br> <br>
  To run the program:
  <br>
  clone/download entire folder, and extract the contents into a folder (c:\reactApp\).
@@ -17,4 +17,8 @@
  <br>
  Open the file c:\reactApp\index.html by Google Chrome.
  <br>
- 
+ The main files involved:
+ <br>
+ App.js - Main coding for react.js framework  <br>
+ index.html - Main page <br>
+ The Log.txt - The log for the development <br>
