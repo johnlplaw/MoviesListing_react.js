@@ -1,16 +1,17 @@
-
 import React from 'react';
 import { createSwitchNavigator } from "@react-navigation/core";
 import { createBrowserApp, Link } from "@react-navigation/web";
 
+//Main movie list
 const API = 'https://cdn-discover.hooq.tv/v1.2/discover/feed?region=ID&perPage=20&page='
+//Default page id
 const DEFAULT_QUERY = '1';
 
 const detAPI = 'https://cdn-discover.hooq.tv/v1.2/discover/titles/'
 const detquery = "796a53a9-28f1-4436-8a97-d989abf53320"
 
+//Listing component
 class Home extends React.Component {
-	
 	
 	constructor(props) {
 		super(props);
@@ -26,15 +27,11 @@ class Home extends React.Component {
 		this.lastScrollY = 0;
 		this.ticking = false;
 		
-		
 	}
   
 	componentDidMount() {
 		
-		console.log('add');
 		window.addEventListener('scroll', this.handleScroll.bind(this));
-
-		console.log('>>>>>>>>>' + this.state.pageid);
 		fetch(API + this.state.pageid)
 		.then(response => {
 			if (response.ok) {
@@ -53,7 +50,6 @@ class Home extends React.Component {
 	}
 	
 	componentWillUnmount() {
-		console.log('remove');
 		window.removeEventListener('scroll', this.handleScroll.bind(this));
 	}
 	
@@ -77,22 +73,20 @@ class Home extends React.Component {
 
 	handleScroll(e) {
 		
-		//e.preventDefault();
-		//var { pageid } = this.state;
+		e.preventDefault();
+		var { pageid } = this.state;
 		
-		//this.lastScrollY = window.scrollY;
-		//const wrappedElement = document.getElementById('header');
-		//console.log(wrappedElement.getBoundingClientRect().bottom + 
-		//	' <> ' + window.innerHeight)
-		//if (wrappedElement.getBoundingClientRect().bottom <= window.innerHeight) {
-		//	console.log('header bottom reached');
-		//	console.log(pageid);
-		//	var nextPageid = parseInt(this.state.pageid) + 1;
-		//	this.setState({pageid: nextPageid });
-		//	console.log(nextPageid);
-		//	document.removeEventListener('scroll', this.handleScroll);
-		//}
-		
+		this.lastScrollY = window.scrollY;
+		const wrappedElement = document.getElementById('header');
+		if(wrappedElement){
+			if (wrappedElement.getBoundingClientRect().bottom <= window.innerHeight) {
+				console.log('reached to bottom');
+				var nextPageid = parseInt(this.state.pageid) + 1;
+				this.setState({pageid: nextPageid });
+				this.fetching(nextPageid);
+				//document.removeEventListener('scroll', this.handleScroll);
+			}
+		}
 	};
   
 	render() {
@@ -112,22 +106,20 @@ class Home extends React.Component {
 					movies.map((movie) =>
 						movie.type === "Multi-Title-Manual-Curation" ? 
 							
-							
 							<div key={movie.row_id}>
 								Main Type: {movie.type} 
 									{
 										movie.data.map(mm => 
 											
-											<div>
+											<div key={mm.id}>
 											 
 												{
 													mm.images.map(img => 
 														img.type === "POSTER" ? 
-														<div>
+														<div key={img.url}>
 															<img src={img.url} height="230px" 
 															onClick={() => {
 																window.removeEventListener('scroll', this.handleScroll.bind(this));
-																/* 1. Navigate to the Details route with params */
 																this.props.navigation.navigate('Details', {
 																	pageid: mm.id,
 																	
@@ -141,14 +133,11 @@ class Home extends React.Component {
 												{mm.title}
 											</div>
 											
-											
 										)
 										
 									}
 							
 							</div>
-							
-							
 						
 						:	<span></span>					
 						
@@ -159,13 +148,11 @@ class Home extends React.Component {
 					<input type="button" value="Back" onClick={() => {
 						var nextPageid = parseInt(this.state.pageid) - 1;
 						nextPageid = nextPageid < 1 ? 1:nextPageid;
-						console.log(nextPageid);
 						this.setState({pageid: nextPageid});
 						this.fetching(nextPageid);
 					}} />
 					<input type="button" value="Next" onClick={() => {
 						var nextPageid = parseInt(this.state.pageid) + 1;
-						console.log(nextPageid);
 						this.setState({pageid: nextPageid});
 						this.fetching(nextPageid);
 					}} />
@@ -178,7 +165,6 @@ class Home extends React.Component {
 		);
 	}
 	
-	
 }
 
 
@@ -187,9 +173,7 @@ class Details extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		console.log('con');
 		const { navigation } = this.props;
-		//const itemId = navigation.getParam('pageid', 'no-id');
 		
 		this.state = {
 			movies: [],
@@ -200,17 +184,13 @@ class Details extends React.Component {
 	}
 	
 	componentDidMount() {
-		console.log('con2');
 		var itemId = this.state.pageid;
-		console.log(">>>>>" + itemId);
-		
 		
 		if(itemId || itemId != 'no-id') {
 			fetch(detAPI + itemId)
 			//fetch(detAPI + detquery)
 			.then(response => {
 				if (response.ok) {
-					
 					return response.json();
 				} else {
 					throw new Error('Something went wrong ...');
@@ -238,22 +218,13 @@ class Details extends React.Component {
 			return <p>Loading ...</p>;
 		}
 		
-		console.log(">>" + movies.images)
-		console.log(">>>>" + this.state.movies.images)
-		
 		if (!movies.images) {
 			return <p>Loading ...</p>;
 		}
 		
-		//var moviesStr = [];
-		//moviesStr.push(movies);
-		
 		var jsonstr = JSON.stringify(movies);
-		console.log("???" + jsonstr);
 		jsonstr = '['+jsonstr+']';
 		var movieslist = JSON.parse(jsonstr);
-		console.log("???" + movieslist);
-		
 		
 		return (
 				
@@ -263,7 +234,7 @@ class Details extends React.Component {
 					movieslist.map((movie) => 
 					
 					
-					<div>
+					<div key={movie.id}>
 						<table>
 							<tbody>
 							<tr>
@@ -359,21 +330,18 @@ class Details extends React.Component {
 					)
 				}
 			</div>
-		
-			
+				
 		);
 	}
-	
-	
+		
 }
-
 
 const AppNavigator = createSwitchNavigator(
-{
-	Home,
-	Details,
-}
-	);
+	{
+		Home,
+		Details,
+	}
+);
 
 const App = createBrowserApp(AppNavigator);
 export default App;
